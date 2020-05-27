@@ -42,14 +42,12 @@ class Repo:
         with (self.location / Repo.config_file).open() as file:
             yaml.safe_load(file)
 
-        if sys.platform.startswith('linux'):
+        if sys.platform.startswith('linux'):  # pragma: no cover
             self._envs = [
                 FairRootEnv(self, 'debian10'),
                 FairRootEnv(self, 'fedora31')
             ]
-        elif sys.platform.startswith('darwin'):
-            self._envs = []
-        else:
+        else:  # pragma: no cover
             self._envs = []
 
     @property

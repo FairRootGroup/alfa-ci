@@ -39,49 +39,8 @@ def test_unknown_option():
     assert rc.value.code == 2
 
 
-class MockEnv:
-    """Mock-up for alfaci.env"""
-    def install(self):
-        pass
-
-
-class MockRepo:
-    """Mock-up for alfaci.repo.Repo"""
-    def __init__(self, path):
-        self._location = path / '.alfa-ci'
-        self._envs = [MockEnv(), MockEnv()]
-
-    @property
-    def location(self):
-        """prop"""
-        return self._location
-
-    @property
-    def envs(self):
-        """prop"""
-        return self._envs
-
-
-@pytest.fixture
-def mock_init_repo(monkeypatch):
-    """alfaci.repo.init_repo() mocked to return MockRepo"""
-    monkeypatch.setattr(alfaci.cli, "init_repo", lambda path: MockRepo(path))
-
-
-@pytest.fixture
-def mock_repo(monkeypatch):
-    """alfaci.repo.Repo mocked by MockRepo"""
-    monkeypatch.setattr(alfaci.cli, "Repo", MockRepo)
-
-
-@pytest.fixture
-def mock_cwd(tmp_path, monkeypatch):
-    """cwd mocked to tmp dir"""
-    monkeypatch.chdir(tmp_path)
-    return tmp_path
-
-
-def test_init(capsys, mock_cwd, mock_init_repo):
+@pytest.mark.usefixtures('mock_init_repo')
+def test_init(capsys, mock_cwd):
     """Check output and return code of init subcmd"""
     with ArgvContext(CMD, 'init'), pytest.raises(SystemExit) as rc:
         alfaci.cli.main()
@@ -92,7 +51,8 @@ def test_init(capsys, mock_cwd, mock_init_repo):
     assert rc.value.code == 0
 
 
-def test_list(capsys, mock_cwd, mock_repo):
+@pytest.mark.usefixtures('mock_cwd', 'mock_repo')
+def test_list(capsys):
     """Check output and return code of list subcmd"""
     with ArgvContext(CMD, 'list'), pytest.raises(SystemExit) as rc:
         alfaci.cli.main()
@@ -102,7 +62,8 @@ def test_list(capsys, mock_cwd, mock_repo):
     assert rc.value.code == 0
 
 
-def test_install(mock_cwd, mock_repo):
+@pytest.mark.usefixtures('mock_cwd', 'mock_repo')
+def test_install():
     """Check return code of install subcmd"""
     with ArgvContext(CMD, 'install'), pytest.raises(SystemExit) as rc:
         alfaci.cli.main()

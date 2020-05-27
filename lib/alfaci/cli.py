@@ -21,7 +21,8 @@ class ArgumentParser(argparse.ArgumentParser):
 
 def do_shell_setup(_args):
     """Print the argcomplete bash hook to be eval'ed by the user"""
-    for reg in ('register-python-argcomplete3', 'register-python-argcomplete'):
+    for reg in ('register-python-argcomplete3',
+                'register-python-argcomplete'):  # pragma: no cover
         if shutil.which(reg) is not None:
             break
     check_call([reg, 'alfa-ci'])

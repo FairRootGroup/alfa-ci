@@ -1,15 +1,8 @@
 """alfaci.repo test module"""
 
-import pytest
 import sys
+import pytest
 from alfaci.repo import init_repo, Repo, Error
-
-
-@pytest.fixture
-def empty_initialized_repo(tmp_path):
-    """Create empty repo"""
-    init_repo(str(tmp_path))
-    return tmp_path
 
 
 def test_load(empty_initialized_repo):
