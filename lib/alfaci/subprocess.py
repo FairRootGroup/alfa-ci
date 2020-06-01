@@ -1,5 +1,9 @@
 import logging
-from asyncio import run
+import sys
+try:
+    from asyncio import run
+except ImportError:
+    import asyncio
 from asyncio.subprocess import create_subprocess_exec, PIPE, STDOUT
 
 from alfaci import Error
@@ -34,8 +38,19 @@ async def _call(program, *args, logger=log):
     return (cmd, pid, rc)
 
 
+def _run(coro):
+    """Python 3.6 does not support asyncio.run(),
+       so we implement it the old way too"""
+    if sys.version_info < (3, 7, 0):
+        loop = asyncio.get_event_loop()
+        result = loop.run_until_complete(coro)
+        loop.close()
+        return result
+    return run(coro)
+
+
 def call(program, *args, logger=log):
     """Helper to call external CLIs"""
-    cmd, pid, rc = run(_call(program, *args, logger=logger))
+    cmd, pid, rc = _run(_call(program, *args, logger=logger))
     if rc != 0:
         raise CalledProcessError(cmd, pid, rc)
