@@ -1,11 +1,12 @@
 from pathlib import Path
+import logging
 import yaml
 
+from alfaci import Error
 from alfaci.envs.fairroot import get_envs as fairroot_envs
+from alfaci.subprocess import call
 
-
-class Error(Exception):
-    """Basic repo error"""
+log = logging.getLogger(__name__)
 
 
 class NotInitializedError(Error):
@@ -26,8 +27,10 @@ class Repo:
 
     repo_dir = '.alfa-ci'
     config_file = 'config.yaml'
+    fairsoft_dir = 'fairsoft'
 
     def __init__(self, path):
+        self._envs = None
         self._location = path / Repo.repo_dir
 
         if not (self.location.exists() or
@@ -37,14 +40,14 @@ class Repo:
         with (self.location / Repo.config_file).open() as file:
             yaml.safe_load(file)
 
-        self._envs = fairroot_envs(self)
-
     @property
     def location(self):
         return self._location
 
     @property
     def envs(self):
+        if self._envs is None:
+            self._envs = fairroot_envs(self)
         return self._envs
 
 
@@ -61,5 +64,12 @@ def init_repo(path):
     except NotInitializedError:
         (path / Repo.repo_dir).mkdir(parents=False, exist_ok=False)
         (path / Repo.repo_dir / Repo.config_file).touch(exist_ok=False)
+        call('git',
+             *[
+                 'clone', '-b', 'dev',
+                 'https://github.com/FairRootGroup/FairSoft',
+                 (path / Repo.repo_dir / Repo.fairsoft_dir)
+             ],
+             logger=log)
 
     return Repo(path)

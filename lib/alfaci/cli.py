@@ -100,6 +100,7 @@ def main():
     if not isinstance(numeric_level, int):
         raise ValueError('Invalid log level: %s' % args.level)
     logging.basicConfig(level=numeric_level, format='%(message)s')
+    logging.getLogger('asyncio').setLevel(logging.WARNING)
 
     if hasattr(args, 'func'):
         args.func(args)
