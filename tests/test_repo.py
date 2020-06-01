@@ -12,6 +12,7 @@ def test_load_unitialized(tmp_path):
         Repo(tmp_path)
 
 
+@pytest.mark.usefixtures('mock_subprocess_call')
 def test_init_repo(tmp_path):
     init_repo(tmp_path)
 

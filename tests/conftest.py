@@ -1,8 +1,9 @@
 """shared fixtures for tests module"""
+# pylint: disable=redefined-outer-name, unused-argument
 
 import pytest
 import alfaci.cli
-from alfaci.repo import init_repo
+from alfaci.repo import Repo
 from alfaci.env import Env
 from alfaci.envs.fairroot import FairRootEnv
 
@@ -36,7 +37,14 @@ class CliMockRepo:
 
 
 @pytest.fixture
-def mock_init_repo(monkeypatch):
+def mock_subprocess_call(monkeypatch):
+    monkeypatch.setattr(
+        alfaci.repo, "call", lambda *_args, **_kwargs:
+        ('<mocked git clone>', 42, 0))
+
+
+@pytest.fixture
+def mock_init_repo(monkeypatch, mock_subprocess_call):
     """alfaci.repo.init_repo() mocked to return MockRepo"""
     monkeypatch.setattr(alfaci.cli, "init_repo", CliMockRepo)
 
@@ -55,20 +63,20 @@ def mock_cwd(tmp_path, monkeypatch):
 
 
 @pytest.fixture
-def empty_initialized_repo(tmp_path):
+def empty_initialized_repo(tmp_path, mock_subprocess_call):
     """Create empty repo"""
-    init_repo(str(tmp_path))
+    (tmp_path / Repo.repo_dir).mkdir(parents=False, exist_ok=False)
+    (tmp_path / Repo.repo_dir / Repo.config_file).touch(exist_ok=False)
     return tmp_path
 
 
 @pytest.fixture
-def mock_env(empty_initialized_repo):  # pylint: disable=redefined-outer-name
+def mock_env(empty_initialized_repo):
     """Create mocked env"""
     return Env(empty_initialized_repo)
 
 
 @pytest.fixture
 def mock_fairroot_env(empty_initialized_repo):
-    # pylint: disable=redefined-outer-name
     """Create mocked fairroot env"""
     return FairRootEnv(empty_initialized_repo, 'fedora31')
