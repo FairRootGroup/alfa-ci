@@ -16,8 +16,8 @@ _COMMON_PKGS_RPM = [
 ]
 
 _COMMON_PKGS_DEB = [
-    'build-essential', 'debianutils', 'g++', 'gcc', 'gfortran'
-    'libc6-dev', 'lsb-release', 'python-dev', 'xz-utils'
+    'build-essential', 'debianutils', 'g++', 'gcc', 'gfortran', 'libc6-dev',
+    'lsb-release', 'python-dev', 'xz-utils'
 ]
 
 _INSTALL_YUM = """\

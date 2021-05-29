@@ -22,8 +22,8 @@ setup(
     packages=find_packages('lib'),
     classifiers=[
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: '
-        'GNU General Public License v3 or later (GPLv3+)',
+        ('License :: OSI Approved :: '
+         'GNU General Public License v3 or later (GPLv3+)'),
     ],
     python_requires='>=3.6',
     setup_requires=['wheel'],
