@@ -22,8 +22,7 @@ class FairRootEnv(Env):
         pass
 
     def __repr__(self):
-        return 'fairroot %s (%s)' % (self.name, 'installed'
-                                     if self.installed else 'not installed')
+        return f"fairroot {self.name} (%s) {'installed' if self.installed else 'not installed'}"
 
 
 def get_envs(repo):  # pragma: no cover

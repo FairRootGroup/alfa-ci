@@ -14,8 +14,7 @@ log = logging.getLogger(__name__)
 class CalledProcessError(Error):
     def __init__(self, cmd, pid, rc):
         super().__init__(
-            "Executed '%s' with PID %s with non-zero return code: %s" %
-            (cmd, pid, rc))
+            f"Executed '{cmd}' with PID {pid} with non-zero return code: {rc}")
 
 
 async def _call(program, *args, logger=log):

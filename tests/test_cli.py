@@ -51,7 +51,7 @@ def test_init(caplog, mock_cwd):
     assert len(caplog.records) == 1
     captured = caplog.records[0].message.strip()
     loc = mock_cwd / '.alfa-ci'
-    expected = 'Initialized empty alfa-ci repository in %s' % loc
+    expected = f'Initialized empty alfa-ci repository in {loc}'
     assert captured == expected
     assert rc.value.code == 0
 

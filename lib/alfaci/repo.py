@@ -16,7 +16,7 @@ class NotInitializedError(Error):
 
 class AlreadyExistsError(Error):
     def __init__(self, location):
-        super().__init__('Repository already exists in %s' % location)
+        super().__init__(f'Repository already exists in {location}')
 
 
 class Repo:
