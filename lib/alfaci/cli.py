@@ -19,7 +19,7 @@ class ArgumentParser(argparse.ArgumentParser):
     """Specialized arg parser with custom error handling"""
     def error(self, message):
         self.print_help(sys.stderr)
-        self.exit(2, '%s: error: %s\n' % (self.prog, message))
+        self.exit(2, f'{self.prog}: error: {message}\n')
 
 
 def do_shell_setup(_args):
@@ -98,8 +98,9 @@ def main():
 
     numeric_level = getattr(logging, args.level.upper(), None)
     if not isinstance(numeric_level, int):
-        raise ValueError('Invalid log level: %s' % args.level)
+        raise ValueError(f'Invalid log level: {args.level}')
     logging.basicConfig(level=numeric_level, format='%(message)s')
+    logging.getLogger('asyncio').setLevel(logging.WARNING)
 
     if hasattr(args, 'func'):
         args.func(args)
